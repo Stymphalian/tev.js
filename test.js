@@ -1,4 +1,3 @@
-
 var Get = [];
 var Want = ["f1", "f1", "f4", "f2", "f1", "f2", "f3", "f5", "f1", "f2", "f3", "f5", "f1", "f4", "f2", "f1", "f1", "f4", "f4", "f3", "f6"];
 var log = function(str){Get.push(str); }
@@ -59,3 +58,33 @@ tev("*.*.*",this);
 
 // console.log(Get);
 CompareStringArrays(Want,Get);
+
+/*
+var f1 = function(){console.log("f1");}
+var f2 = function(){console.log("f2");}
+var f3 = function(){console.log("f3");}
+
+tev.On("f1",f1);
+tev.On("f1.f2",f2);
+
+// repeat an event only a certain number of time ( ie. once())
+// Note the use of the wildcard. f3 will be called after any event
+// along the chain f1.f2
+tev.Repeat(1,"f1.f2.*",f3);
+
+// call the functions along the chain f1.*.*
+tev("f1.*.*");
+// f1
+// f2
+// f3
+
+// f3 only repeats once.
+tev("f1.*.*");
+// f1
+// f2
+
+// we remove the event handler on "f1"
+tev.Off("f1");
+tev("f1.*.*");
+// f2
+*/
