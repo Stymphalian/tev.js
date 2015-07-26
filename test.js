@@ -57,7 +57,13 @@ tev.On("*.*.f3",f3);
 tev("*.*.*",this);
 
 // console.log(Get);
-CompareStringArrays(Want,Get);
+var failOrPass = CompareStringArrays(Want,Get);
+var resultObj = document.getElementById("result");
+if(failOrPass){
+    resultObj.innerHTML = "Tests Passed.";
+}else{
+    resultObj.innerHTML = "Tests Failed. Please see the console";
+}
 
 /*
 var f1 = function(){console.log("f1");}
