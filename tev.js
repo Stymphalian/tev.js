@@ -1,5 +1,5 @@
 // Tev is a tiny library for manipulating custom user events.
-// It allows the user to specify dependencies between events using a 'chain' selector.
+// Specify dependencies between events using a 'chain' selector.
 // For example
 //      var f1 = function(){console.log("f1");}
 //      var f2 = function(){console.log("f2");}
@@ -27,15 +27,17 @@
     var has = Object.hasOwnProperty;
 
     // Emit all the events along the entire selector chain.
-    // @param selector:string - the string selector specifying the event to be fired.
-    // @param scope (optional) - Use the scope when calling the function. Default is 'this'
-    // @param data (optional) - User defined data to pass to the event callbacks.
-    // @return - returns the tev object.
-    // Example:
-    //      f1.*.f2
-    //          fires all events hooked onto f1 or *
-    //          fires all children events of f1
-    //          fire all events names f2 which is a child of f1
+    // @Args:
+    // selector:string - Selector specifying the event to be fired.
+    // scope (optional) - Context when calling the function. Default 'this'
+    // data (optional) - User defined data to pass to the event callbacks.
+    // @Return:
+    // returns the tev object.
+    // @Example:
+    //   f1.*.f2
+    //     fires all events hooked onto f1 or *
+    //     fires all children events of f1
+    //     fire all events names f2 which is a child of f1
     function tev(selector,scope,data){
         scope = scope || this;
         var callback = (function(node){
@@ -77,11 +79,14 @@
     tev.stopFlag = false;
 
     // Hook the function onto the specified event.
-    // @param selector:string - the event in which to listen to.
-    // @param func - the callback function to attach to the event.
-    //      function(data){...}
-    //          data is any user specified object provided when emitting the event.
-    //          otherwise it is undefined.
+    // @Args:
+    // selector:string - the event in which to listen to.
+    // func - the callback function to attach to the event.
+    //   function(data){...}
+    //     data is any user specified object provided when emitting th event.
+    //     otherwise it is undefined.
+    // @Return:
+    // The tev object.
     tev.On = function(selector,func){
         var node = tev.leafNode(tev.root,selector);
         node.f.push(func);
@@ -90,17 +95,19 @@
 
 
     // Remove the listener(s) from the event.
-    // @param selector:string - A selector specifying the callback to be removed.
-    // @param func (optional) - the function pointer to be removed.
-    //      if not provided the default behavior is to remove ALL functions
-    //      attached to the selector.
-    // @return - return the tev object.
-    // Example:
-    //      tev.On("f1.f2",f2);
-    //      tev.On("f1.f3",f3);
-    //      tev.On("f1.*",f4);
-    //      tev.Off("f1.*",f2);         // remove f2 from "f1.f2" event
-    //      tev.Off("f1.*");            // remove all callbacks attached to "f1.*"
+    // @Args:
+    // selector:string - A selector specifying the callback to be removed.
+    // func (optional) - the function pointer to be removed.
+    //   if not provided the default behavior is to remove ALL functions
+    //   attached to the selector.
+    // @Return:
+    // The tev object.
+    // @Example:
+    //   tev.On("f1.f2",f2);
+    //   tev.On("f1.f3",f3);
+    //   tev.On("f1.*",f4);
+    //   tev.Off("f1.*",f2);    // remove f2 from "f1.f2" event
+    //   tev.Off("f1.*");       // remove all callbacks attached to "f1.*"
     tev.Off = function(selector,func){
         var tokens = selector.split(tev.seperator);
         tev.traverse(selector,tev.root,(function(node,index){
@@ -132,14 +139,18 @@
         return tev;
     };
 
-    // Hook the function onto the specified event, but have it only fire 'times' times.
-    // @param times:int - the number of times to fire the event, before
-    //      automatically removing the handler from the listeners list.
-    // @param selector:string - the event in which to listen to.
-    // @param func - the callback function to attach to the event.
-    //      function(data){...}
-    //          data is any user specified object provided when emitting the event.
-    //          otherwise it is undefined.
+    // Hook the function onto the specified event. Only fire the event 'times'
+    //   number of times before removing the callback from the event.
+    // @Args:
+    // times:int - the number of times to fire the event, before
+    //   automatically removing the handler from the listeners list.
+    // selector:string - the event in which to listen to.
+    // func - the callback function to attach to the event.
+    //   function(data){...}
+    //     data is any user specified object provided when emitting the event.
+    //     otherwise it is undefined.
+    // @Return:
+    // The tev object.
     tev.Repeat = function(times,selector,func){
         var node = tev.leafNode(tev.root,selector);
         node.f.push(func);
@@ -158,9 +169,11 @@
 
     // Private function used to return the leaf node specified by the selector
     // It will create nodes along the path if they do not exist.
-    // @param root - The node in which to start the search.
-    // @param selector:string - the string of the event names.
-    // @return - the leaf node specified by the selector
+    // @Args:
+    // root - The node in which to start the search.
+    // selector:string - the string of the event names.
+    // @Return:
+    // The leaf node specified by the selector
     tev.leafNode = function(root,selector){
         var tokens = selector.split(tev.seperator);
         var node = root;
@@ -178,13 +191,15 @@
 
     // Private function which performs a BFS along all the nodes specified by
     // the selector. Starts the search from the provided root node.
-    // @param selector:string - the selector string specifying the nodes to visit.
-    // @param root - The node in which to start the traversal.
-    // @param function(node:Object,index:int) {...}
-    //      The user specified callback function which is called for every node
-    //      along the selector path. node is the node which is being processed.
-    //      index is the index into the selector in which this node was processed at.
-    tev.traverse = function(selector,root, callback){
+    // @Args:
+    // selector:string - the selector string specifying the nodes to visit.
+    // root - The node in which to start the traversal.
+    // callback - function(node:Object, index:int) {...}
+    //   The user specified callback function which is called for every node
+    //   along the selector path. node is the node which is being processed.
+    //   index is the int index into the selector string in which the node was
+    //   processed at.
+    tev.traverse = function(selector, root, callback) {
 
         // Internal function which returns a list of children nodes which match
         // the given key.
@@ -192,7 +207,10 @@
         // @param key: string - name of the event in which to collect the nodes.
         function getNodes(current,key){
             // If there exists a wildcard node, then add it to the list.
-            var output = ( has.call(current.nodes,"*") ) ?  [current.nodes["*"]] : [];
+            var output = []
+            if (has.call(current.nodes, "*")) {
+                output = [current.nodes["*"]]
+            }
 
             if(key === "*"){
                 // wildcard operator.
@@ -214,7 +232,7 @@
 
         var tokens = selector.split(tev.seperator);
         var queue = [];
-        // Record the node and the index into the tokens array in which to process.
+        // Record node and index into the tokens array in which to process.
         queue.push([tev.root,0]);
 
         var i, ilen;
